@@ -1,1 +1,2 @@
 - [ ] Adicionar borda com erro vermelho no input
+- [ ] Adicionar loading state no botão
