@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Ignite Call - Home</title>
+        <title>Ignite Call</title>
       </Head>
       <Container>
         <Hero>
