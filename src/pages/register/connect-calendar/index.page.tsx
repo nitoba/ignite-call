@@ -1,10 +1,34 @@
 import Head from 'next/head'
-import { Button, Heading, MultiStep, Text } from '@nito-ui/react'
+import { Button, Heading, MultiStep, Text, useToast } from '@nito-ui/react'
 import { Container, Header } from '../styles'
-import { ArrowRight } from 'phosphor-react'
+import { ArrowRight, Check } from 'phosphor-react'
 import { ConnectBox, ConnectItem } from './styles'
+import { signIn, useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 export default function ConnectCalendar() {
+  const toast = useToast()
+  const router = useRouter()
+  const session = useSession()
+
+  const isSignIn = session.status === 'authenticated'
+  const hasAuthError = router.query.error === 'permissions'
+
+  useEffect(() => {
+    if (hasAuthError) {
+      toast.showErrorMessage({
+        title: 'Permissions',
+        description:
+          'Fail to connect with Google, verify if you enable permissions to access Google Calendar',
+      })
+    }
+  }, [hasAuthError])
+
+  async function handleConnectCalendar() {
+    signIn('google', { callbackUrl: '/register/connect-calendar' })
+  }
+
   return (
     <>
       <Head>
@@ -22,11 +46,22 @@ export default function ConnectCalendar() {
         <ConnectBox>
           <ConnectItem>
             <Text>Google Calendar</Text>
-            <Button variant="secondary" size="sm">
-              Conectar
-            </Button>
+            {isSignIn ? (
+              <Button variant="primary" size="sm">
+                Conectado
+                <Check />
+              </Button>
+            ) : (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleConnectCalendar}
+              >
+                Conectar
+              </Button>
+            )}
           </ConnectItem>
-          <Button type="submit">
+          <Button disabled={!isSignIn}>
             Próximo passo
             <ArrowRight />
           </Button>

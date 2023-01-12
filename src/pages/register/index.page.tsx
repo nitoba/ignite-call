@@ -1,4 +1,11 @@
-import { Button, Heading, MultiStep, Text, TextInput } from '@nito-ui/react'
+import {
+  Button,
+  Heading,
+  MultiStep,
+  Text,
+  TextInput,
+  useToast,
+} from '@nito-ui/react'
 import { ArrowRight } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -38,6 +45,7 @@ export default function Register() {
     push,
     query: { username },
   } = useRouter()
+  const toast = useToast()
 
   const {
     register,
@@ -59,6 +67,10 @@ export default function Register() {
         { username, name },
         {
           onError(error: any) {
+            toast.showErrorMessage({
+              title: 'Error',
+              description: error.message,
+            })
             setError('username', { message: error.message })
           },
         },
