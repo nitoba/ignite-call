@@ -35,6 +35,7 @@ type RegisterFormData = z.infer<typeof registerSchema>
 
 export default function Register() {
   const {
+    push,
     query: { username },
   } = useRouter()
 
@@ -57,13 +58,12 @@ export default function Register() {
       await mutateAsync(
         { username, name },
         {
-          onSettled(data, error: any) {
-            if (error) {
-              return setError('username', { message: error.message })
-            }
+          onError(error: any) {
+            setError('username', { message: error.message })
           },
         },
       )
+      await push('/register/connect-calendar')
     } catch (error) {
       console.log(error)
     }
