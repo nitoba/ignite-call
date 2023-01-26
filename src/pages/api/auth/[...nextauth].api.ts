@@ -40,12 +40,17 @@ export function buildNextAuthOptions(
 
     callbacks: {
       async signIn({ account }) {
-        console.log(account?.scope)
-
         if (!account?.scope?.includes(SCOPES.CALENDAR_SCOPE)) {
           return '/register/connect-calendar/?error=permissions'
         } else {
           return true
+        }
+      },
+
+      async session({ session, user }) {
+        return {
+          ...session,
+          user,
         }
       },
     },

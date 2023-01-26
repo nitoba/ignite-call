@@ -29,10 +29,14 @@ export default function ConnectCalendar() {
     signIn('google', { callbackUrl: '/register/connect-calendar' })
   }
 
+  async function handleNextStep() {
+    await router.push('/register/time-intervals')
+  }
+
   return (
     <>
       <Head>
-        <title>Register Step 1 - Ignite Call</title>
+        <title>Register Step 2 - Ignite Call</title>
       </Head>
       <Container>
         <Header>
@@ -61,7 +65,7 @@ export default function ConnectCalendar() {
               </Button>
             )}
           </ConnectItem>
-          <Button disabled={!isSignIn}>
+          <Button disabled={!isSignIn} onClick={handleNextStep}>
             Próximo passo
             <ArrowRight />
           </Button>
