@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiResponse, NextPageContext } from 'next'
 import NextAuth, { AuthOptions } from 'next-auth'
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google'
 import { PrismaAdapter } from '../../../lib/auth/prisma-adapter'
@@ -10,8 +10,8 @@ const SCOPES = {
 }
 
 export function buildNextAuthOptions(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  req: NextApiRequest | NextPageContext['req'],
+  res: NextApiResponse | NextPageContext['res'],
 ): AuthOptions {
   return {
     secret: process.env.NEXTAUTH_SECRECT,

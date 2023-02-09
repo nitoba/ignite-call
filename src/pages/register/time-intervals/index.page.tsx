@@ -10,6 +10,7 @@ import {
 } from '@nito-ui/react'
 import { useMutation } from '@tanstack/react-query'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { ArrowRight } from 'phosphor-react'
 import { useFieldArray, useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
@@ -63,6 +64,7 @@ type TimeIntervalsFormOutput = z.infer<typeof timeIntervalsFormSchema>
 
 export default function TimeIntervals() {
   const { showErrorMessage } = useToast()
+  const { push } = useRouter()
   const {
     register,
     control,
@@ -102,6 +104,10 @@ export default function TimeIntervals() {
       await mutateAsync(data, {
         onError(error) {
           showErrorMessage({ title: 'Error', description: error.message })
+        },
+
+        onSuccess() {
+          push('/register/update-profile')
         },
       })
     } catch (error) {
