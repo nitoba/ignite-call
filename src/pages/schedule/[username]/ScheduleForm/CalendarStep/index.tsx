@@ -19,8 +19,10 @@ export function CalendarStep() {
     month: 'long',
   }).format(selectedDate!)
 
+  const isSelectedDate = !!selectedDate
+
   return (
-    <Container isTimePickerOpen={!!selectedDate}>
+    <Container isTimePickerOpen={isSelectedDate}>
       <Calendar onDateSelected={setSelectedDate} selectedDate={selectedDate} />
 
       {selectedDate && (

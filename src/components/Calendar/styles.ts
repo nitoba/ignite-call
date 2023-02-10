@@ -75,10 +75,10 @@ export const CalendarDay = styled('button', {
   background: '$gray600',
   textAlign: 'center',
   borderRadius: '$sm',
-  transition: 'background 0.2s',
+  transition: 'transform 0.25s',
 
   '&:not(:disabled):hover': {
-    background: '$gray700',
+    transform: 'scale(0.95)',
   },
 
   '&:not(:disabled):focus': {
