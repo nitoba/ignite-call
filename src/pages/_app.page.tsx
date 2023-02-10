@@ -5,6 +5,7 @@ import { queryClient } from '../lib/react-query'
 import { globalStyles } from '../styles/global'
 import { ToastProvider } from '@nito-ui/react'
 import '@nito-ui/react/dist/index.css'
+import '../lib/dayjs'
 
 globalStyles()
 

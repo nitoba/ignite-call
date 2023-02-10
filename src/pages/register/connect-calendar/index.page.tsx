@@ -23,7 +23,7 @@ export default function ConnectCalendar() {
           'Fail to connect with Google, verify if you enable permissions to access Google Calendar',
       })
     }
-  }, [hasAuthError])
+  }, [hasAuthError, toast])
 
   async function handleConnectCalendar() {
     signIn('google', { callbackUrl: '/register/connect-calendar' })

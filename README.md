@@ -1,2 +1,3 @@
 - [ ] Adicionar borda com erro vermelho no input
 - [ ] Adicionar loading state no botão
+- [ ] Validar se diferentes usuários estão usando contas do google iguais
