@@ -1,5 +1,8 @@
+import { useQuery } from '@tanstack/react-query'
 import dayjs, { Dayjs } from 'dayjs'
+import { useRouter } from 'next/router'
 import { useMemo, useState } from 'react'
+import { getBlockedDates } from '../../../services/get-blocked-dates'
 import { getWeekDays } from '../../../utils/get-week-day'
 
 type CalendarWeek = {
@@ -19,6 +22,7 @@ type UseCalendarProps = {
   handlePreviousMonth: () => void
   handleNextMonth: () => void
   calendarWeeks: CalendarWeeks
+  isLoadingCalendar: boolean
 }
 
 type UseCalendarInputProps = {
@@ -34,12 +38,27 @@ export function useCalendar(props?: UseCalendarInputProps): UseCalendarProps {
     }
   })
 
+  const {
+    query: { username },
+  } = useRouter()
+
+  const { data: blockedDates, isLoading: isLoadingCalendar } = useQuery(
+    ['user-blocked-dates', currentDate.get('year'), currentDate.get('month')],
+    () =>
+      getBlockedDates({
+        username: String(username),
+        month: currentDate.get('month'),
+        year: currentDate.get('year'),
+      }),
+  )
+
   const weekDays = getWeekDays({ short: true })
 
   const currentMonth = currentDate.format('MMMM')
   const currentYear = currentDate.format('YYYY')
 
   const calendarWeeks = useMemo(() => {
+    if (!blockedDates) return []
     const daysInMonthArray = Array.from({
       length: currentDate.daysInMonth(),
     }).map((_, i) => currentDate.set('date', i + 1))
@@ -66,7 +85,10 @@ export function useCalendar(props?: UseCalendarInputProps): UseCalendarProps {
       ...previousMonthArray.map((date) => ({ date, disabled: true })),
       ...daysInMonthArray.map((date) => ({
         date,
-        disabled: date.endOf('day').isBefore(new Date()),
+        disabled:
+          date.endOf('day').isBefore(new Date()) ||
+          blockedDates.blockedWeekDays.includes(date.get('day')) ||
+          blockedDates.blockedDates.includes(date.get('date')),
       })),
       ...nextMonthFillArray.map((date) => ({ date, disabled: true })),
     ]
@@ -85,7 +107,7 @@ export function useCalendar(props?: UseCalendarInputProps): UseCalendarProps {
     )
 
     return calendarWeeks
-  }, [currentDate])
+  }, [currentDate, blockedDates])
 
   function handlePreviousMonth() {
     const previousMonthDate = currentDate.subtract(1, 'month')
@@ -104,5 +126,6 @@ export function useCalendar(props?: UseCalendarInputProps): UseCalendarProps {
     weekDays,
     handleNextMonth,
     handlePreviousMonth,
+    isLoadingCalendar,
   }
 }

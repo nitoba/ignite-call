@@ -1,4 +1,5 @@
 import { CaretLeft, CaretRight } from 'phosphor-react'
+import { Text } from '@nito-ui/react'
 import { useCalendar } from './hooks/useCalendar'
 import {
   CalendarActions,
@@ -22,7 +23,16 @@ export function Calendar({ onDateSelected, selectedDate }: CalendarProps) {
     calendarWeeks,
     handleNextMonth,
     handlePreviousMonth,
+    isLoadingCalendar,
   } = useCalendar({ defaultDate: selectedDate })
+
+  if (isLoadingCalendar) {
+    return (
+      <CalendarContainer>
+        <Text css={{ textAlign: 'center' }}>Loading calendar...</Text>
+      </CalendarContainer>
+    )
+  }
 
   return (
     <CalendarContainer>

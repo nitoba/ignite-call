@@ -1,8 +1,14 @@
+import { Text } from '@nito-ui/react'
+import { useQuery } from '@tanstack/react-query'
+import { useRouter } from 'next/router'
+import { X } from 'phosphor-react'
 import { useState } from 'react'
 import { Calendar } from '../../../../../components/Calendar'
+import { getUserAvailableTimes } from '../../../../../services/get-user-available-times'
 import {
   Container,
   TimePicker,
+  TimePickerEmpty,
   TimePickerHeader,
   TimePickerItem,
   TimePickerList,
@@ -10,6 +16,9 @@ import {
 
 export function CalendarStep() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const {
+    query: { username },
+  } = useRouter()
 
   const selectedWeekDay = new Intl.DateTimeFormat('pt-BR', {
     weekday: 'long',
@@ -20,6 +29,12 @@ export function CalendarStep() {
   }).format(selectedDate!)
 
   const isSelectedDate = !!selectedDate
+
+  const { data, isFetching, isLoading, isRefetching } = useQuery(
+    ['user-available-times', selectedDate, username],
+    () => getUserAvailableTimes(String(username), selectedDate!),
+    { enabled: !!selectedDate },
+  )
 
   return (
     <Container isTimePickerOpen={isSelectedDate}>
@@ -35,21 +50,34 @@ export function CalendarStep() {
           </TimePickerHeader>
 
           <TimePickerList>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>09:00h</TimePickerItem>
-            <TimePickerItem>10:00h</TimePickerItem>
-            <TimePickerItem>11:00h</TimePickerItem>
-            <TimePickerItem>12:00h</TimePickerItem>
-            <TimePickerItem>13:00h</TimePickerItem>
-            <TimePickerItem>14:00h</TimePickerItem>
-            <TimePickerItem>15:00h</TimePickerItem>
-            <TimePickerItem>16:00h</TimePickerItem>
-            <TimePickerItem>17:00h</TimePickerItem>
-            <TimePickerItem>18:00h</TimePickerItem>
-            <TimePickerItem>19:00h</TimePickerItem>
-            <TimePickerItem>20:00h</TimePickerItem>
-            <TimePickerItem>21:00h</TimePickerItem>
-            <TimePickerItem>22:00h</TimePickerItem>
+            {isFetching || isLoading || isRefetching ? (
+              <TimePickerEmpty>
+                <Text>Loading...</Text>
+              </TimePickerEmpty>
+            ) : (
+              <>
+                {data?.availableTimes.length === 0 &&
+                  data?.availableTimes.length === 0 && (
+                    <TimePickerEmpty>
+                      <X />
+                      <Text size="sm">
+                        Desculpe, nenhum horário disponível para hoje
+                      </Text>
+                    </TimePickerEmpty>
+                  )}
+
+                {data?.possibleTimes.map((possibleTime) => {
+                  return (
+                    <TimePickerItem
+                      key={possibleTime}
+                      disabled={!data.availableTimes.includes(possibleTime)}
+                    >
+                      {String(possibleTime).padStart(2, '0')}:00h
+                    </TimePickerItem>
+                  )
+                })}
+              </>
+            )}
           </TimePickerList>
         </TimePicker>
       )}

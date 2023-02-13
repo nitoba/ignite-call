@@ -91,3 +91,20 @@ export const TimePickerItem = styled('button', {
     opacity: 0.4,
   },
 })
+
+export const TimePickerEmpty = styled('div', {
+  textAlign: 'center',
+
+  svg: {
+    width: '$5',
+    height: '$5',
+    backgroundColor: '$gray600',
+    borderRadius: '$sm',
+    padding: '$1',
+  },
+
+  [`> ${Text}`]: {
+    display: 'block',
+    color: '$gray200',
+  },
+})
