@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { api } from '../lib/axios'
 
 type GetBlockedDatesResponse = {
   blockedWeekDays: number[]
@@ -16,8 +16,8 @@ export async function getBlockedDates({
   year,
   month,
 }: GetBlockedDatesParams) {
-  const { data } = await axios.get<GetBlockedDatesResponse>(
-    `/api/users/${username}/blocked-dates`,
+  const { data } = await api.get<GetBlockedDatesResponse>(
+    `/users/${username}/blocked-dates`,
     {
       params: { year, month: String(month + 1).padStart(2, '0') },
     },

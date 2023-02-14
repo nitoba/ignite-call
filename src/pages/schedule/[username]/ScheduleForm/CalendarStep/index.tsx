@@ -1,5 +1,6 @@
 import { Text } from '@nito-ui/react'
 import { useQuery } from '@tanstack/react-query'
+import dayjs from 'dayjs'
 import { useRouter } from 'next/router'
 import { X } from 'phosphor-react'
 import { useState } from 'react'
@@ -14,7 +15,11 @@ import {
   TimePickerList,
 } from './styles'
 
-export function CalendarStep() {
+type CalendarStepProps = {
+  onSelectDateTime: (date: Date) => void
+}
+
+export function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const {
     query: { username },
@@ -35,6 +40,14 @@ export function CalendarStep() {
     () => getUserAvailableTimes(String(username), selectedDate!),
     { enabled: !!selectedDate },
   )
+
+  function handleSelectTime(hour: number) {
+    const dateWithTime = dayjs(selectedDate)
+      .set('hour', hour)
+      .startOf('hour')
+      .toDate()
+    onSelectDateTime(dateWithTime)
+  }
 
   return (
     <Container isTimePickerOpen={isSelectedDate}>
@@ -71,6 +84,7 @@ export function CalendarStep() {
                     <TimePickerItem
                       key={possibleTime}
                       disabled={!data.availableTimes.includes(possibleTime)}
+                      onClick={() => handleSelectTime(possibleTime)}
                     >
                       {String(possibleTime).padStart(2, '0')}:00h
                     </TimePickerItem>

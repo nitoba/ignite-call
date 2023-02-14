@@ -1,8 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Text, TextArea, TextInput } from '@nito-ui/react'
+import { Button, Text, TextArea, TextInput, useToast } from '@nito-ui/react'
+import { useMutation } from '@tanstack/react-query'
+import dayjs from 'dayjs'
+import { useRouter } from 'next/router'
 import { CalendarBlank, Clock } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import {
+  createScheduling,
+  CreateScheduling,
+} from '../../../../../services/create-scheduling'
 import { ConfirmForm, FormActions, FormError, FormHeader } from './styles'
 
 const confirmFormSchema = z.object({
@@ -15,7 +22,12 @@ const confirmFormSchema = z.object({
 
 type ConfirmFormData = z.infer<typeof confirmFormSchema>
 
-export function ConfirmStep() {
+type ConfirmStepProps = {
+  schedulingDate: Date
+  onCancel: () => void
+}
+
+export function ConfirmStep({ schedulingDate, onCancel }: ConfirmStepProps) {
   const {
     handleSubmit,
     register,
@@ -24,18 +36,51 @@ export function ConfirmStep() {
     resolver: zodResolver(confirmFormSchema),
   })
 
-  function handleConfirmScheduling(data: ConfirmFormData) {
-    console.log(data)
+  const {
+    query: { username },
+  } = useRouter()
+
+  const { showErrorMessage, showSuccessMessage } = useToast()
+
+  const describeDate = dayjs(schedulingDate).format('DD[ de ]MMMM[ de ]YYYY')
+  const describeTime = dayjs(schedulingDate).format('HH:mm[h]')
+
+  const { mutateAsync } = useMutation<void, Error, CreateScheduling>((data) =>
+    createScheduling(data),
+  )
+
+  async function handleConfirmScheduling(data: ConfirmFormData) {
+    try {
+      await mutateAsync(
+        { username: String(username), date: schedulingDate, ...data },
+        {
+          onError(error) {
+            showErrorMessage({ title: 'Error', description: error.message })
+          },
+
+          onSuccess() {
+            showSuccessMessage({
+              title: 'Muito bem!',
+              description: 'Seu agendamento foi realizado com sucesso',
+            })
+            // push(`/schedule/${username}`)
+            onCancel()
+          },
+        },
+      )
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
     <ConfirmForm as="form" onSubmit={handleSubmit(handleConfirmScheduling)}>
       <FormHeader>
         <CalendarBlank />
-        <Text>22 de Setembro de 2022</Text>
+        <Text as="time">{describeDate}</Text>
         <Text>
           <Clock />
-          18:00h
+          {describeTime}
         </Text>
       </FormHeader>
 
@@ -61,7 +106,12 @@ export function ConfirmStep() {
       </label>
 
       <FormActions>
-        <Button type="button" variant="tertiary" disabled={isSubmitting}>
+        <Button
+          type="button"
+          variant="tertiary"
+          disabled={isSubmitting}
+          onClick={onCancel}
+        >
           Cancelar
         </Button>
 

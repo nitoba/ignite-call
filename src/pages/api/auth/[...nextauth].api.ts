@@ -22,7 +22,12 @@ export function buildNextAuthOptions(
         clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
 
         authorization: {
-          params: { scope: Object.values(SCOPES).join(' ') },
+          params: {
+            scope: Object.values(SCOPES).join(' '),
+            prompt: 'consent',
+            access_type: 'offline',
+            response_type: 'code',
+          },
         },
 
         profile: (profile: GoogleProfile) => {
