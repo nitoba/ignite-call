@@ -1,5 +1,6 @@
 import { Avatar, Heading, Text } from '@nito-ui/react'
 import { GetStaticPaths, GetStaticProps } from 'next'
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { prisma } from '../../../lib/prisma'
 import { ScheduleForm } from './ScheduleForm'
@@ -30,15 +31,19 @@ export default function Schedule({ user }: ScheduleProps) {
   }
 
   return (
-    <Container>
-      <UserHeader>
-        <Avatar src={user.avatarUrl} alt={user.name}></Avatar>
-        <Heading>{user.name}</Heading>
-        <Text size="sm">{user.bio}</Text>
-      </UserHeader>
+    <>
+      <NextSeo title={`Agendar com ${user.name} - Ignite Call`} />
 
-      <ScheduleForm />
-    </Container>
+      <Container>
+        <UserHeader>
+          <Avatar src={user.avatarUrl} alt={user.name}></Avatar>
+          <Heading>{user.name}</Heading>
+          <Text size="sm">{user.bio}</Text>
+        </UserHeader>
+
+        <ScheduleForm />
+      </Container>
+    </>
   )
 }
 

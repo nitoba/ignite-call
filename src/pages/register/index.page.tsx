@@ -15,7 +15,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { registerUser } from '../../services/register-user'
-import Head from 'next/head'
+import { NextSeo } from 'next-seo'
 
 const registerSchema = z.object({
   username: z
@@ -87,9 +87,7 @@ export default function Register() {
 
   return (
     <>
-      <Head>
-        <title>Register Step 1 - Ignite Call</title>
-      </Head>
+      <NextSeo title="Registre-se - Ignite Call" />
       <Container>
         <Header>
           <Heading as="h1">Bem-vindo ao Ignite Call!</Heading>

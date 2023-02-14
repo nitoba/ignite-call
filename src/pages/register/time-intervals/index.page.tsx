@@ -9,7 +9,7 @@ import {
   useToast,
 } from '@nito-ui/react'
 import { useMutation } from '@tanstack/react-query'
-import Head from 'next/head'
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { ArrowRight } from 'phosphor-react'
 import { useFieldArray, useForm, Controller } from 'react-hook-form'
@@ -117,9 +117,11 @@ export default function TimeIntervals() {
 
   return (
     <>
-      <Head>
-        <title>Register Step 3 - Ignite Call</title>
-      </Head>
+      <NextSeo
+        title="Selecione seus horários disponíveis - Ignite Call"
+        noindex
+      />
+
       <Container>
         <Header>
           <Heading as="h1">Quase lá</Heading>

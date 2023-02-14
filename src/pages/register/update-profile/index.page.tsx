@@ -13,7 +13,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import z from 'zod'
 import { Container, FormLabel, Header } from '../styles'
 import { useMutation } from '@tanstack/react-query'
-import Head from 'next/head'
 import { FormAnnotation, ProfileBox } from './styles'
 import { GetServerSideProps } from 'next'
 import { unstable_getServerSession } from 'next-auth'
@@ -21,6 +20,7 @@ import { buildNextAuthOptions } from '../../api/auth/[...nextauth].api'
 import { useSession } from 'next-auth/react'
 import { updateUserProfile } from '../../../services/update-user-profile'
 import { useRouter } from 'next/router'
+import { NextSeo } from 'next-seo'
 
 const updateProfileSchema = z.object({
   bio: z.string(),
@@ -68,9 +68,7 @@ export default function UpdateProfile() {
 
   return (
     <>
-      <Head>
-        <title>Register Step 1 - Ignite Call</title>
-      </Head>
+      <NextSeo title="Atualize seu perfil - Ignite Call" noindex />
       <Container>
         <Header>
           <Heading as="h1">Bem-vindo ao Ignite Call!</Heading>

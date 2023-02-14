@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import { Button, Heading, MultiStep, Text, useToast } from '@nito-ui/react'
 import { Container, Header } from '../styles'
 import { ArrowRight, Check } from 'phosphor-react'
@@ -6,6 +5,7 @@ import { ConnectBox, ConnectItem } from './styles'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import { NextSeo } from 'next-seo'
 
 export default function ConnectCalendar() {
   const toast = useToast()
@@ -35,9 +35,8 @@ export default function ConnectCalendar() {
 
   return (
     <>
-      <Head>
-        <title>Register Step 2 - Ignite Call</title>
-      </Head>
+      <NextSeo title="Connecte-se sua agenda do Google - Ignite Call" noindex />
+
       <Container>
         <Header>
           <Heading as="h1">Bem-vindo ao Ignite Call!</Heading>

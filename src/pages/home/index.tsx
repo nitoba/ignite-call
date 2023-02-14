@@ -1,17 +1,18 @@
 import { Heading, Text } from '@nito-ui/react'
-import Head from 'next/head'
 import Image from 'next/image'
 import { Container, Hero, Preview } from './styles'
 
 import previewImage from '../../assets/app-preview.png'
 import { ClaimUsernameForm } from './components/ClaimUsernameForm'
+import { NextSeo } from 'next-seo'
 
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>Ignite Call</title>
-      </Head>
+      <NextSeo
+        title="Descomplique sua agenda - Ignite Call"
+        description="Conecte seu calendário e permita que as pessoas marquem agendamentos no seu tempo livre"
+      />
       <Container>
         <Hero>
           <Heading as="h1" size="4xl">
